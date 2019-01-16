@@ -74,10 +74,10 @@ void IterativeBoost::compute(const cedar::proc::Arguments&)
   {
      boost_current = boost_current + boost_step;
   }
-  else
+  /*else
   {
      boost_current = 0;
-  }
+  }*/
   this->mBoost->getData().at<float>(0, 0) = boost_current;
 
 }
