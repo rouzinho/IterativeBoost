@@ -1,4 +1,4 @@
-# MotorHead in Cedar
+# Iterative Boost in Cedar
 
 This Cedar plugin induce an iterative boost. At each time step, an increasing boost is produced until a certain threshold.
 The widget takes a node as input. So basically, a boost rises until it receives an activation from a node.
