@@ -54,7 +54,9 @@ cedar::proc::Step(true),
 mBoostStep(new cedar::aux::DoubleParameter(this,"Boost Step",0.1)),
 mBoost(new cedar::aux::MatData(cv::Mat::zeros(1, 1, CV_32F)))
 {
-this->declareInput("peak detector", true);
+this->declareInput("peak stop", true);
+this->declareInput("explore", true);
+this->declareInput("ready", true);
 this->declareOutput("boost", this->mBoost);
 this->connect(this->mBoostStep.get(), SIGNAL(valueChanged()), this, SLOT(reCompute()));
 
@@ -66,19 +68,28 @@ void IterativeBoost::compute(const cedar::proc::Arguments&)
 {
 
   //cv::Mat doublepos = op1->getData<cv::Mat>();
-  if (auto peak_detector = boost::dynamic_pointer_cast<cedar::aux::ConstMatData>(this->getInput("peak detector")))
+  auto exp = boost::dynamic_pointer_cast<cedar::aux::ConstMatData>(this->getInput("explore"));
+  auto peak_detector = boost::dynamic_pointer_cast<cedar::aux::ConstMatData>(this->getInput("peak stop"));
+  auto ready_peak = boost::dynamic_pointer_cast<cedar::aux::ConstMatData>(this->getInput("ready"));
+  exploration = cedar::aux::math::getMatrixEntry<double>(exp->getData(), 0, 0);
+  ready = cedar::aux::math::getMatrixEntry<double>(ready_peak->getData(), 0, 0);
+
+  if (exploration > 0.9)
   {
-    peak = cedar::aux::math::getMatrixEntry<double>(peak_detector->getData(), 0, 0);
+     if(ready > 0.9)
+     {
+        peak = cedar::aux::math::getMatrixEntry<double>(peak_detector->getData(), 0, 0);
+        if(peak < 0.9)
+        {
+           boost_current = boost_current + boost_step;
+        }
+     }
+     else
+     {
+        boost_current = 0;
+     }
+     this->mBoost->getData().at<float>(0, 0) = boost_current;
   }
-  if(peak < 0.5)
-  {
-     boost_current = boost_current + boost_step;
-  }
-  /*else
-  {
-     boost_current = 0;
-  }*/
-  this->mBoost->getData().at<float>(0, 0) = boost_current;
 
 }
 
