@@ -1,7 +1,7 @@
 # Iterative Boost in Cedar
 
 This Cedar plugin induce an iterative boost. At each time step, an increasing boost is produced until a certain threshold.
-The widget takes a node as input. So basically, a boost rises until it receives an activation from a node.
+The widget takes two nodes as input. So basically, a boost rises until it receives an activation from a stop node. When the reset node is activated, the boost is reset to 0 and start rising again.
 It's pratical if you want to slowly rise the resting level of a Neural field and see the higher activation peaks. The input node stops the rise of the resting level, so easy to integrate in any architecture.
 
 Everything you want to know about DFT -> https://dynamicfieldtheory.org/
@@ -11,7 +11,7 @@ Cedar is the C++ Framework implementing the concepts of DFT -> https://cedar.ini
 
 ## Getting Started
 
-The plugin is a widget reading an input node (trigger) and producing a rising boost.
+The plugin is a widget reading two input node (reset and stop) and producing a rising boost.
 
 The code work for the 6.x version of Cedar.
 
